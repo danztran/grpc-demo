@@ -1,0 +1,8 @@
+version: v1
+directories:
+  - proto
+  # - buf.build/envoyproxy/protoc-gen-validate
+  # - buf.build/googleapis/googleapis
+  # - third_party/envoyproxy
+  # - third_party/googleapis
+  # - third_party/protoc-gen-openapiv2

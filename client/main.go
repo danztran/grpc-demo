@@ -22,16 +22,14 @@ package main
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
+	pb "github.com/danztran/grpc_demo/proto"
 	"google.golang.org/grpc"
-	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 
 const (
-	address     = "localhost:50051"
-	defaultName = "world"
+	address = "localhost:50051"
 )
 
 func main() {
@@ -44,15 +42,17 @@ func main() {
 	c := pb.NewGreeterClient(conn)
 
 	// Contact the server and print out its response.
-	name := defaultName
-	if len(os.Args) > 1 {
-		name = os.Args[1]
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: name})
+	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: "foo"})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
 	log.Printf("Greeting: %s", r.GetMessage())
+
+	r, err = c.SayHelloAgain(ctx, &pb.HelloRequest{Name: "bar"})
+	if err != nil {
+		log.Fatalf("could not greet again: %v", err)
+	}
+	log.Printf("Greeting again: %s", r.GetMessage())
 }
