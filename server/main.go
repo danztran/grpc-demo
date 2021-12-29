@@ -28,8 +28,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/carousell/gologger/log"
 	pb "github.com/danztran/grpc_demo/proto"
+	"github.com/danztran/logger/log"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
 	"google.golang.org/grpc"
