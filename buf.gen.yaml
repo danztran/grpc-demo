@@ -7,19 +7,25 @@ version: v1
 #       - buf.build/envoyproxy/protoc-gen-validate
 plugins:
   - name: go
-    out: proto
+    out: api
     opt: paths=source_relative
   - name: go-grpc
-    out: proto
+    out: api
     opt:
       - paths=source_relative
   - name: validate
-    out: proto
+    out: api
     opt:
       - paths=source_relative
       - lang=go
   - name: grpc-gateway
-    out: proto
+    out: api
     opt:
       - paths=source_relative
       - generate_unbound_methods=true
+  - name: openapiv2
+    out: api
+    opt:
+      - json_names_for_fields=true
+      - simple_operation_ids=true
+      - allow_delete_body=true

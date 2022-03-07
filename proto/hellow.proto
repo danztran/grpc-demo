@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-option go_package = "github.com/danztran/grpc_demo/proto";
+option go_package = "github.com/danztran/grpc_demo/api";
 package danztran.grpc_demo;
 
 import "validate/validate.proto";

@@ -1,0 +1,22 @@
+name: grpc-demo-client
+reDeploy: false
+deleteDeployment: false
+owner: nguyentranbao
+imageName: grpc-demo
+imageVersion: 0.0.1
+runningCommand: ["./client"]
+health: ["true"]
+metrics:
+  enabled: false
+replicaCount: 2
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+env:
+- name: SERVER_ADDR
+  value: dns:///grpc-demo-server:80

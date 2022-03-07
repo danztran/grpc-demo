@@ -1,0 +1,25 @@
+name: grpc-demo-server
+reDeploy: false
+deleteDeployment: false
+owner: nguyentranbao
+imageName: grpc-demo
+imageVersion: 0.0.3
+runningCommand: ["./server"]
+health: ["true"]
+metrics:
+  enabled: false
+replicaCount: 2
+service:
+  internalPort: 50051
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+env:
+- name: SHUTDOWN_HANG
+  value: 10s

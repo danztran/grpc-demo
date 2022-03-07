@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: hellow.proto
 
-package proto
+package api
 
 import (
 	context "context"

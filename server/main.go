@@ -23,42 +23,41 @@ import (
 	"context"
 	"net"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
-	pb "github.com/danztran/grpc_demo/proto"
+	"github.com/danztran/grpc_demo/api"
+	"github.com/danztran/grpc_demo/util"
 	"github.com/danztran/logger/log"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
 	"google.golang.org/grpc"
 )
 
-const (
-	grpcAddr = ":50051"
-	httpAddr = ":50052"
+var (
+	grpcAddr     = ":50051"
+	httpAddr     = ":50052"
+	shutdownHang = util.Getenv("SHUTDOWN_HANG", "5s")
 )
 
 // Service is used to implement helloworld.GreeterServer.
 type Service struct {
-	pb.UnimplementedGreeterServer
+	api.UnimplementedGreeterServer
 }
 
 // SayHello implements helloworld.GreeterServer
-func (s *Service) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
+func (s *Service) SayHello(ctx context.Context, in *api.HelloRequest) (*api.HelloReply, error) {
 	if err := in.ValidateAll(); err != nil {
 		return nil, err
 	}
 	time.Sleep(1000 * time.Millisecond)
 	log.Infof("Received: %v", in.GetName())
-	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
+	return &api.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
 
 // SayHello implements helloworld.GreeterServer
-func (s *Service) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
+func (s *Service) SayHelloAgain(ctx context.Context, in *api.HelloRequest) (*api.HelloReply, error) {
 	log.Infof("Received again: %v", in.GetName())
-	return &pb.HelloReply{Message: "Hello " + in.GetName() + " again"}, nil
+	return &api.HelloReply{Message: "Hello " + in.GetName() + " again"}, nil
 }
 
 func main() {
@@ -76,8 +75,8 @@ func main() {
 	defer httpServer.Shutdown(ctx)
 
 	svc := new(Service)
-	pb.RegisterGreeterServer(grpcServer, svc)
-	pb.RegisterGreeterHandlerServer(ctx, mux, svc)
+	api.RegisterGreeterServer(grpcServer, svc)
+	api.RegisterGreeterHandlerServer(ctx, mux, svc)
 
 	// close
 	defer func() {
@@ -86,6 +85,12 @@ func main() {
 		httpServer.Shutdown(ctx)
 		grpcServer.GracefulStop()
 	}()
+
+	dur, err := time.ParseDuration(shutdownHang)
+	if err != nil {
+		panic(err)
+	}
+	defer time.Sleep(dur)
 
 	errchan := make(chan error)
 
@@ -113,17 +118,10 @@ func main() {
 	}()
 
 	select {
-	case <-StopSignal():
+	case <-util.StopSignal():
 	case err := <-errchan:
 		log.Errorf("start error / %v", err)
 	}
 
 	log.Info("terminating...")
-}
-
-// StopSignal return a canceling signals channel (like INT, TERM)
-func StopSignal() chan os.Signal {
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	return quit
 }

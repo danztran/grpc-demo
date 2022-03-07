@@ -3,7 +3,7 @@ module github.com/danztran/grpc_demo
 go 1.17
 
 require (
-	github.com/danztran/logger v0.3.4
+	github.com/danztran/logger v0.3.5
 	github.com/envoyproxy/protoc-gen-validate v0.1.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa

@@ -21,38 +21,48 @@ package main
 
 import (
 	"context"
-	"log"
-	"time"
 
-	pb "github.com/danztran/grpc_demo/proto"
+	"github.com/danztran/grpc_demo/api"
+	"github.com/danztran/grpc_demo/util"
+	"github.com/danztran/logger/log"
 	"google.golang.org/grpc"
 )
 
-const (
-	address = "localhost:50051"
+var (
+	address = util.Getenv("SERVER_ADDR", "localhost:50051")
 )
 
 func main() {
+	defer log.Infod()("execution time")
+
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewGreeterClient(conn)
+	c := api.NewGreeterClient(conn)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	go func() {
+		<-util.StopSignal()
+		log.Infof("terminating...")
+		cancel()
+	}()
+
+	pool := util.NewWorkerPool(80)
+	defer pool.Wait()
 
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-	defer cancel()
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: "foo"})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+	for ctx.Err() == nil {
+		pool.Run(func() {
+			ctx := context.Background()
+			r, err := c.SayHello(ctx, &api.HelloRequest{Name: "foo"})
+			if err != nil {
+				log.Warnf("could not greet: %v", err)
+			}
+			log.Infof("Greeting: %s", r.GetMessage())
+		})
 	}
-	log.Printf("Greeting: %s", r.GetMessage())
-
-	r, err = c.SayHelloAgain(ctx, &pb.HelloRequest{Name: "bar"})
-	if err != nil {
-		log.Fatalf("could not greet again: %v", err)
-	}
-	log.Printf("Greeting again: %s", r.GetMessage())
 }
