@@ -27,7 +27,6 @@ import (
 
 	"github.com/danztran/grpc_demo/api"
 	"github.com/danztran/grpc_demo/util"
-	"github.com/danztran/logger/log"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
 	"google.golang.org/grpc"
@@ -37,6 +36,7 @@ var (
 	grpcAddr     = ":50051"
 	httpAddr     = ":50052"
 	shutdownHang = util.Getenv("SHUTDOWN_HANG", "5s")
+	log          = util.NewLogger()
 )
 
 // Service is used to implement helloworld.GreeterServer.

@@ -4,6 +4,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	"go.uber.org/zap"
 )
 
 // StopSignal return a canceling signals channel (like INT, TERM)
@@ -20,4 +22,9 @@ func Getenv(key string, def string) string {
 	}
 
 	return def
+}
+
+func NewLogger() *zap.SugaredLogger {
+	logger, _ := zap.NewProduction()
+	return logger.Sugar()
 }

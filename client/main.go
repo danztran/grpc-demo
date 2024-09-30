@@ -24,17 +24,15 @@ import (
 
 	"github.com/danztran/grpc_demo/api"
 	"github.com/danztran/grpc_demo/util"
-	"github.com/danztran/logger/log"
 	"google.golang.org/grpc"
 )
 
 var (
 	address = util.Getenv("SERVER_ADDR", "localhost:50051")
+	log     = util.NewLogger()
 )
 
 func main() {
-	defer log.Infod()("execution time")
-
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {

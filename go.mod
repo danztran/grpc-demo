@@ -1,22 +1,20 @@
 module github.com/danztran/grpc_demo
 
-go 1.21
+go 1.22.0
 
 require (
-	github.com/danztran/logger v0.3.5
-	github.com/envoyproxy/protoc-gen-validate v0.1.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
-	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa
-	google.golang.org/grpc v1.43.0
-	google.golang.org/protobuf v1.27.1
+	github.com/envoyproxy/protoc-gen-validate v1.1.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.22.0
+	go.uber.org/zap v1.27.0
+	google.golang.org/genproto/googleapis/api v0.0.0-20240930140551-af27646dc61f
+	google.golang.org/grpc v1.67.0
+	google.golang.org/protobuf v1.34.2
 )
 
 require (
-	github.com/golang/protobuf v1.5.2 // indirect
-	go.uber.org/atomic v1.7.0 // indirect
-	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.19.1 // indirect
-	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
-	golang.org/x/sys v0.0.0-20210816183151-1e6c022a8912 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
+	golang.org/x/net v0.29.0 // indirect
+	golang.org/x/sys v0.25.0 // indirect
+	golang.org/x/text v0.18.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240930140551-af27646dc61f // indirect
 )
