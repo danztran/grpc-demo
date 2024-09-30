@@ -1,6 +1,6 @@
 module github.com/danztran/grpc_demo
 
-go 1.17
+go 1.21
 
 require (
 	github.com/danztran/logger v0.3.5
