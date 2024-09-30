@@ -22,7 +22,7 @@ package main
 import (
 	"context"
 
-	"github.com/danztran/grpc_demo/api"
+	"github.com/danztran/grpc_demo/pb"
 	"github.com/danztran/grpc_demo/util"
 	"google.golang.org/grpc"
 )
@@ -39,7 +39,7 @@ func main() {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := api.NewGreeterClient(conn)
+	c := pb.NewGreeterClient(conn)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -56,7 +56,7 @@ func main() {
 	for ctx.Err() == nil {
 		pool.Run(func() {
 			ctx := context.Background()
-			r, err := c.SayHello(ctx, &api.HelloRequest{Name: "foo"})
+			r, err := c.SayHello(ctx, &pb.HelloRequest{Name: "foo"})
 			if err != nil {
 				log.Warnf("could not greet: %v", err)
 			}

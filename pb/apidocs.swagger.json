@@ -19,7 +19,7 @@
     "/api/v1/say/hello": {
       "post": {
         "summary": "Sends a greeting",
-        "operationId": "SayHello",
+        "operationId": "Greeter_SayHello",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -37,6 +37,7 @@
         "parameters": [
           {
             "name": "body",
+            "description": "The request message containing the user's name.",
             "in": "body",
             "required": true,
             "schema": {
@@ -65,6 +66,28 @@
       "properties": {
         "name": {
           "type": "string"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "email": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "hobbies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       },
       "description": "The request message containing the user's name."
@@ -91,6 +114,7 @@
         "details": {
           "type": "array",
           "items": {
+            "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
         }

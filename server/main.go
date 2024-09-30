@@ -25,7 +25,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/danztran/grpc_demo/api"
+	"github.com/danztran/grpc_demo/pb"
 	"github.com/danztran/grpc_demo/util"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
@@ -41,23 +41,23 @@ var (
 
 // Service is used to implement helloworld.GreeterServer.
 type Service struct {
-	api.UnimplementedGreeterServer
+	pb.UnimplementedGreeterServer
 }
 
 // SayHello implements helloworld.GreeterServer
-func (s *Service) SayHello(ctx context.Context, in *api.HelloRequest) (*api.HelloReply, error) {
+func (s *Service) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	if err := in.ValidateAll(); err != nil {
 		return nil, err
 	}
 	time.Sleep(1000 * time.Millisecond)
 	log.Infof("Received: %v", in.GetName())
-	return &api.HelloReply{Message: "Hello " + in.GetName()}, nil
+	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
 
 // SayHello implements helloworld.GreeterServer
-func (s *Service) SayHelloAgain(ctx context.Context, in *api.HelloRequest) (*api.HelloReply, error) {
+func (s *Service) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Infof("Received again: %v", in.GetName())
-	return &api.HelloReply{Message: "Hello " + in.GetName() + " again"}, nil
+	return &pb.HelloReply{Message: "Hello " + in.GetName() + " again"}, nil
 }
 
 func main() {
@@ -75,8 +75,8 @@ func main() {
 	defer httpServer.Shutdown(ctx)
 
 	svc := new(Service)
-	api.RegisterGreeterServer(grpcServer, svc)
-	api.RegisterGreeterHandlerServer(ctx, mux, svc)
+	pb.RegisterGreeterServer(grpcServer, svc)
+	pb.RegisterGreeterHandlerServer(ctx, mux, svc)
 
 	// close
 	defer func() {
